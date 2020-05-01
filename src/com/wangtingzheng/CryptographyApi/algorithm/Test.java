@@ -1,9 +1,9 @@
 package com.wangtingzheng.CryptographyApi.algorithm;
 
 import com.wangtingzheng.CryptographyApi.parentClass.Algorithm;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.wangtingzheng.CryptographyApi.util.CharMatrix;
+import com.wangtingzheng.CryptographyApi.util.Matrix;
+import com.wangtingzheng.CryptographyApi.util.MatrixClass;
 
 /**
  * @author WangTingZheng
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Test extends Algorithm  {
 
-    public Test(String messageSpace, String cipherSpace, List keySpace) {
+    public Test(Matrix messageSpace, Matrix cipherSpace, Matrix keySpace) {
         super(messageSpace, cipherSpace, keySpace);
     }
 
@@ -28,6 +28,12 @@ public class Test extends Algorithm  {
 
     @Override
     public boolean checkMessageSpace() {
+        if(messageSpace.type  == MatrixClass.Type.CharMatrix)
+        {
+            CharMatrix charMatrix = messageSpace.getMatrix();
+            char[] res = charMatrix.charData[0];
+        }
+
         return false;
     }
 

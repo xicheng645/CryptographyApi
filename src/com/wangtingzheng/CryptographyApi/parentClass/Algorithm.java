@@ -1,6 +1,7 @@
 package com.wangtingzheng.CryptographyApi.parentClass;
 
-import java.util.List;
+import com.wangtingzheng.CryptographyApi.util.Matrix;
+import com.wangtingzheng.CryptographyApi.util.MatrixClass;
 
 /**
  * @author WangTingZheng
@@ -8,11 +9,11 @@ import java.util.List;
  * @features
  */
 public abstract class Algorithm {
-    String messageSpace = null;
-    String cipherSpace = null;
-    List keySpace = null;
+    public Matrix messageSpace = null;
+    public Matrix cipherSpace = null;
+    public Matrix keySpace = null;
 
-    public Algorithm(String messageSpace, String cipherSpace, List keySpace) {
+    public Algorithm(Matrix messageSpace, Matrix cipherSpace, Matrix keySpace) {
         this.messageSpace = messageSpace;
         this.cipherSpace = cipherSpace;
         this.keySpace = keySpace;
@@ -32,7 +33,7 @@ public abstract class Algorithm {
     {
         return checkMessageSpace()&&checkCipherSpace()&&checkKeySpace();
     }
-    public final String doDecoding()
+    public final Matrix doDecoding()
     {
         if(check())
         {

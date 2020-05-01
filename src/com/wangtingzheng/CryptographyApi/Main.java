@@ -1,12 +1,9 @@
 package com.wangtingzheng.CryptographyApi;
 
-import com.wangtingzheng.CryptographyApi.algorithm.Test;
-import com.wangtingzheng.CryptographyApi.parentClass.Algorithm;
+import com.wangtingzheng.CryptographyApi.util.CharMatrix;
 import com.wangtingzheng.CryptographyApi.util.IntMatrix;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.wangtingzheng.CryptographyApi.util.Matrix;
+import com.wangtingzheng.CryptographyApi.util.MatrixClass;
 
 /**
  * @author WangTingZheng
@@ -14,16 +11,15 @@ import java.util.List;
  * @features
  */
 public class Main {
-    public static int[][] a = {{3,1,2},{-2,0,5}};
-    public static int[][] b = {{-1,3},{0,5},{2,5}};
+    public static int[][] a = {{1, 2, 3, 4}, {3, 2, 4, 1}};
 
     public static void main(String[] args)
     {
-        IntMatrix aMat = new IntMatrix(a);
-        IntMatrix bMat = new IntMatrix(b);
-        IntMatrix res = aMat.multiplyWith(bMat);
-        if(res != null)
-            res.printMatrix();
+        Matrix matrix = new Matrix(a);
+        if(matrix.type == MatrixClass.Type.IntMatirx)
+        {
+            IntMatrix intMatrix = matrix.getMatrix();
+            intMatrix.printMatrix();
+        }
     }
-
 }
