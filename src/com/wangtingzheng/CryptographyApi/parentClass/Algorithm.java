@@ -7,10 +7,10 @@ import java.util.List;
  * @date 2020/4/30 15:33
  * @features
  */
-public class Algorithm {
-    public String messageSpace;
-    public String cipherSpace;
-    public List keySpace = null;
+public abstract class Algorithm {
+    String messageSpace = null;
+    String cipherSpace = null;
+    List keySpace = null;
 
     public Algorithm(String messageSpace, String cipherSpace, List keySpace) {
         this.messageSpace = messageSpace;
@@ -18,33 +18,26 @@ public class Algorithm {
         this.keySpace = keySpace;
     }
 
-    public void decoding()
-    {
+    public abstract void decoding();
 
-    }
+    public abstract void encoding();
 
-    public void encoding()
-    {
+    public abstract boolean checkMessageSpace();
 
-    }
+    public abstract boolean checkCipherSpace();
 
-    public boolean checkMessageSpace()
-    {
-        return false;
-    }
-
-    public boolean checkCipherSpace()
-    {
-        return false;
-    }
-
-    public boolean checkKeySpace()
-    {
-        return false;
-    }
+    public abstract boolean checkKeySpace();
 
     public final boolean check()
     {
         return checkMessageSpace()&&checkCipherSpace()&&checkKeySpace();
+    }
+    public final String doDecoding()
+    {
+        if(check())
+        {
+            decoding();
+        }
+        return cipherSpace;
     }
 }

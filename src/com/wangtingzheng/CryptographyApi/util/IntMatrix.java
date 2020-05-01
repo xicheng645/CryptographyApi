@@ -5,12 +5,10 @@ package com.wangtingzheng.CryptographyApi.util;
  * @date 2020/4/30 22:00
  * @features
  */
-public class IntMatrix extends MatrixParent{
+public class IntMatrix extends Matrix {
 
     int[][] intData = null;
-    public static int add = 1;
-    public static int minus = 2;
-    public static int multiply = 3;
+
 
     public IntMatrix(int[][] intData) {
         this.intData = intData;
@@ -130,6 +128,65 @@ public class IntMatrix extends MatrixParent{
             }
         }
         return res;
+    }
+
+    public IntMatrix inverse()
+    {
+        IntMatrix intMatrix = null;
+        return intMatrix;
+    }
+
+    public IntMatrix inverseCypto()
+    {
+        if(getRow() ==2 )
+        {
+            IntMatrix res = new IntMatrix(getRow(),getColumn());
+            for(int i =0;i<getRow();i++)
+            {
+                for(int j =0;j<getColumn();j++)
+                {
+                    
+                }
+            }
+        }
+        System.out.println("Cryptography inverse can only uses in 2*1 matrix.");
+        return null;
+
+    }
+
+    public String[][] getString()
+    {
+        String[][] res = new String[getRow()][getColumn()];
+        for(int i =0;i<getRow();i++)
+        {
+            for(int j=0;j<getColumn();j++)
+            {
+                res[i][j] = String.valueOf(intData[i][j]+97);
+            }
+        }
+        return res;
+    }
+
+    public void InitWithString(String[][] data)
+    {
+        for(int i =0;i<getRow();i++)
+        {
+            for(int j=0;j<getColumn();j++)
+            {
+                intData[i][j] = Integer.parseInt(data[i][j]) -97;
+            }
+        }
+    }
+
+
+    public int getValue(int row, int column)
+    {
+        return intData[row][column];
+    }
+
+    public void setValue(int row, int column, int value)
+    {
+        intData[row][column] = value;
     }
 
     public int getRow()
