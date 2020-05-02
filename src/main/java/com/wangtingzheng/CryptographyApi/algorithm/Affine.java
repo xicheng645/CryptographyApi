@@ -1,10 +1,10 @@
 package com.wangtingzheng.CryptographyApi.algorithm;
 
-import com.wangtingzheng.CryptographyApi.parentClass.Algorithm;
-import com.wangtingzheng.CryptographyApi.util.CharMatrix;
-import com.wangtingzheng.CryptographyApi.util.IntMatrix;
-import com.wangtingzheng.CryptographyApi.util.Matrix;
-import com.wangtingzheng.CryptographyApi.util.MatrixClass;
+import com.wangtingzheng.cryptographystuct.matrix.CharMatrix;
+import com.wangtingzheng.cryptographystuct.matrix.IntMatrix;
+import com.wangtingzheng.cryptographystuct.matrix.Matrix;
+import com.wangtingzheng.cryptographystuct.matrix.MatrixClass;
+import com.wangtingzheng.cryptographystuct.algorithm.Algorithm;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,5 @@
 package com.wangtingzheng.CryptographyApi;
-
 import com.wangtingzheng.CryptographyApi.algorithm.Affine;
-
 import java.util.Objects;
 
 /**
