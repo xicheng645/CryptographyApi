@@ -1,5 +1,7 @@
 package com.wangtingzheng.CryptographyApi.util;
 
+import java.util.List;
+
 /**
  * @author WangTingZheng
  * @date 2020/4/30 22:00
@@ -9,20 +11,45 @@ public class IntMatrix extends MatrixClass {
 
     public int[][] intData = null;
 
+    /**
+     * 使用int型二维数组创建Matrix对象
+     * @param intData 要输入的int型二维数组
+     */
     public IntMatrix(int[][] intData) {
         type = Type.IntMatirx;
         this.intData = intData;
     }
 
-    public IntMatrix(int row, int column) {
+    /**
+     * 创建一个空的(元素值为0)的Matrix对象
+     * @param row Matrix的行数
+     * @param column Matrix的列数
+     * @param defalutInt
+     */
+    public IntMatrix(int row, int column, int defalutInt) {
         type = Type.IntMatirx;
         int[][] data = new int[row][column];
         for(int i=0;i<row;i++)
         {
             for(int j=0;j<column;j++)
             {
-               data[i][j] = 0;
+               data[i][j] = defalutInt;
             }
+        }
+        this.intData = data;
+    }
+
+    /**
+     * 使用Interger列表创建Matrix对象
+     * @param integers 要输入的Integer型列表
+     */
+    public IntMatrix(List<Integer> integers)
+    {
+        type = Type.IntMatirx;
+        int[][] data = new int[1][integers.size()];
+        for(int i = 0; i< integers.size();i++)
+        {
+            data[0][i] = integers.get(i);
         }
         this.intData = data;
     }
@@ -68,7 +95,7 @@ public class IntMatrix extends MatrixClass {
     {
         if(check(intMatrix, Operation.add))
         {
-            IntMatrix matrixRes = new IntMatrix(getRow(), getColumn());
+            IntMatrix matrixRes = new IntMatrix(getRow(), getColumn(), 0);
 
             for(int i=0;i<getRow();i++)
             {
@@ -92,7 +119,7 @@ public class IntMatrix extends MatrixClass {
     {
         if(check(intMatrix, Operation.add))
         {
-            IntMatrix matrixRes = new IntMatrix(getRow(), getColumn());
+            IntMatrix matrixRes = new IntMatrix(getRow(), getColumn(), 0);
 
             for(int i=0;i<getRow();i++)
             {
@@ -115,7 +142,7 @@ public class IntMatrix extends MatrixClass {
     {
         if(check(intMatrix, Operation.multiply))
         {
-            IntMatrix res  = new IntMatrix(getRow(), intMatrix.getColumn());
+            IntMatrix res  = new IntMatrix(getRow(), intMatrix.getColumn(), 0);
             IntMatrix tras = intMatrix.transpose();
             int a = 0;
             int b = 0;
@@ -145,7 +172,7 @@ public class IntMatrix extends MatrixClass {
      */
     public IntMatrix transpose()
     {
-        IntMatrix res = new IntMatrix(getColumn(),getRow());
+        IntMatrix res = new IntMatrix(getColumn(),getRow(), 0);
         for(int i = 0; i < getRow();i++)
         {
             for(int j = 0;j < getColumn();j++)
@@ -174,7 +201,7 @@ public class IntMatrix extends MatrixClass {
     {
         if(getRow() ==2 )
         {
-            IntMatrix res = new IntMatrix(getRow(),getColumn());
+            IntMatrix res = new IntMatrix(getRow(),getColumn(), 0);
             for(int list = 0; list<getColumn();list++)
             {
                 if(intData[0][list] != list+1)
@@ -233,7 +260,7 @@ public class IntMatrix extends MatrixClass {
      */
     public CharMatrix toCharMatrix()
     {
-        CharMatrix charMatrix = new CharMatrix(getRow(),getColumn());
+        CharMatrix charMatrix = new CharMatrix(getRow(),getColumn(), 'a');
         charMatrix.initWithInt(intData);
         return charMatrix;
     }
@@ -291,5 +318,21 @@ public class IntMatrix extends MatrixClass {
             }
             System.out.println("");
         }
+    }
+
+    public boolean checkIsLetter()
+    {
+        for(int i =0;i<getRow();i++)
+        {
+            for(int j=0;j<getColumn();j++)
+            {
+
+                if(intData[i][j]<0 &&  intData[i][j]>25 )
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

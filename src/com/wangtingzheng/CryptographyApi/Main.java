@@ -1,9 +1,8 @@
 package com.wangtingzheng.CryptographyApi;
 
-import com.wangtingzheng.CryptographyApi.util.CharMatrix;
-import com.wangtingzheng.CryptographyApi.util.IntMatrix;
-import com.wangtingzheng.CryptographyApi.util.Matrix;
-import com.wangtingzheng.CryptographyApi.util.MatrixClass;
+import com.wangtingzheng.CryptographyApi.algorithm.Affine;
+
+import java.util.Objects;
 
 /**
  * @author WangTingZheng
@@ -11,15 +10,20 @@ import com.wangtingzheng.CryptographyApi.util.MatrixClass;
  * @features
  */
 public class Main {
-    public static int[][] a = {{1, 2, 3, 4}, {3, 2, 4, 1}};
+
+
+    public static void AffineTest()
+    {
+        String mess = "unwpc";
+        int[][] key = {{9,2}};
+        Affine affine = new Affine(mess, key);
+        Objects.requireNonNull(affine.doDecoding()).charMatrix.printMatrix();
+    }
 
     public static void main(String[] args)
     {
-        Matrix matrix = new Matrix(a);
-        if(matrix.type == MatrixClass.Type.IntMatirx)
-        {
-            IntMatrix intMatrix = matrix.getMatrix();
-            intMatrix.printMatrix();
-        }
+        AffineTest();
     }
 }
+
+
