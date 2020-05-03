@@ -31,16 +31,16 @@ public class Affine extends Algorithm {
         int k1, k2;
         List<Integer> cipherList = new ArrayList<>();
 
-        k1 = keySpace.getIntValue(0,0);
-        k2 = keySpace.getIntValue(0,1);
+        k1 = keySpace.getIntValue(0,0); //从密钥空间获取第一个密钥
+        k2 = keySpace.getIntValue(0,1); //从密钥空间获取第二个密钥
 
-        Matrix messageSpace_int = messageSpace.toIntMatrix();
+        Matrix messageSpace_int = messageSpace.toIntMatrix(); //把字符型的明文空间转化为整型的明文空间
 
-        for(int ele: messageSpace_int.intData[0])
+        for(int ele: messageSpace_int.intData[0]) //循环读取明文空间里的明文字符，当然是转化为数字之后的
         {
-            cipherList.add(mod(ele*k1+k2, 26));
+            cipherList.add(mod(ele*k1+k2, 26)); //进行加密运算
         }
-        cipherSpace = new Matrix(cipherList).toCharMatrix();
+        cipherSpace = new Matrix(cipherList).toCharMatrix(); //把加密运算的结果（一个数组）作为初始值，创建一个矩形对象，再把矩形对象转化成字符型的，作为密文空间
     }
 
     @Override
@@ -48,38 +48,38 @@ public class Affine extends Algorithm {
         int k1, k2;
         List<Integer> messageList = new ArrayList<>();
 
-        k1 = keySpace.getIntValue(0,0);
-        k2 = keySpace.getIntValue(0,1);
-        k1 = returnInverse(k1,26);
+        k1 = keySpace.getIntValue(0,0); //从密钥空间获取第一个密钥
+        k2 = keySpace.getIntValue(0,1); //从密钥空间获取第二个密钥
+        k1 = returnInverse(k1,26); //获取k1的逆
 
-        Matrix cipherSpaceInt = cipherSpace.toIntMatrix();
+        Matrix cipherSpaceInt = cipherSpace.toIntMatrix();  //把字符型的密文空间转化为整型的密文空间
 
-        for(int ele: cipherSpaceInt.intData[0])
+        for(int ele: cipherSpaceInt.intData[0])//循环读取密文空间里的密文字符，当然是转化为数字之后的
         {
-            messageList.add(mod(k1 * (ele - k2),26));
+            messageList.add(mod(k1 * (ele - k2),26));//进行解密运算
         }
-        messageSpace = new Matrix(messageList).toCharMatrix();
+        messageSpace = new Matrix(messageList).toCharMatrix(); //把解密运算的结果（一个数组）作为初始值，创建一个矩阵对象，再把矩阵对象转化成字符型的，作为明文空间
     }
 
     @Override
     public boolean checkMessageSpace() {
-        return messageSpace.checkIsLetter();
+        return messageSpace.checkIsLetter() && messageSpace.getType() ==Matrix.Type.CharMatrix; //检查密文空间是否都是阿拉伯字母（先要是字符，再要是字母）
     }
 
     @Override
     public boolean checkCipherSpace() {
-        return cipherSpace.checkIsLetter();
+        return cipherSpace.checkIsLetter() && messageSpace.getType() == Matrix.Type.CharMatrix; //检查明文空间是否都是阿拉伯字母（先要是字符，再要是字母）
     }
 
     @Override
     public boolean checkKeySpace() {
-        if(keySpace.getRow() == 1 && keySpace.getColumn() == 2)
+        if(keySpace.getRow() == 1 && keySpace.getColumn() == 2 && keySpace.getType() == Matrix.Type.IntMatrix) //检查密钥空间是否是整型数组，是否有两个
         {
-            int k1 = keySpace.getIntValue(0,0);
-            if(gcd(k1, 26) == 1)
+            int k1 = keySpace.getIntValue(0,0); //获取第一个密钥
+            if(gcd(k1, 26) == 1)  //检查密钥k1于26的最大公约数是否是1，这个是仿射密码算法的要求
             {
-                keySpace.setValue(0,0, mod(keySpace.getIntValue(0,0),26));
-                keySpace.setValue(0,1, mod(keySpace.getIntValue(0,1),26));
+                keySpace.setValue(0,0, mod(keySpace.getIntValue(0,0),26));  //规范密钥（如果不止规定区间内的话）
+                keySpace.setValue(0,1, mod(keySpace.getIntValue(0,1),26));  //规范密钥（如果不止规定区间内的话）
                 return true;
             }
         }
