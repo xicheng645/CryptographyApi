@@ -1,9 +1,8 @@
 package com.wangtingzheng.CryptographyApi.algorithm;
 
-import com.wangtingzheng.cryptographystuct.matrix.CharMatrix;
-import com.wangtingzheng.cryptographystuct.matrix.IntMatrix;
+
 import com.wangtingzheng.cryptographystuct.matrix.Matrix;
-import com.wangtingzheng.cryptographystuct.matrix.MatrixClass;
+
 import com.wangtingzheng.cryptographystuct.algorithm.Algorithm;
 
 import java.util.ArrayList;
@@ -30,82 +29,58 @@ public class Affine extends Algorithm {
     @Override
     public void encoding() {
         int k1, k2;
-        IntMatrix keyIntMatrix = keySpace.getMatrix();
-        k1 = keyIntMatrix.getValue(0,0);
-        k2 = keyIntMatrix.getValue(0,1);
-        if(messageSpace.type == MatrixClass.Type.CharMatrix)
+        List<Integer> cipherList = new ArrayList<>();
+
+        k1 = keySpace.getIntValue(0,0);
+        k2 = keySpace.getIntValue(0,1);
+
+        Matrix messageSpace_int = messageSpace.toIntMatrix();
+
+        for(int ele: messageSpace_int.intData[0])
         {
-            CharMatrix charMatrix = messageSpace.getMatrix();
-            IntMatrix MessageIntMatrix = charMatrix.toIntMatrix();
-            IntMatrix cipherIntMatrx;
-            List<Integer> cipherList = new ArrayList<>();
-            for(int ele: MessageIntMatrix.intData[0])
-            {
-                cipherList.add(mod(ele*k1+k2, 26));
-            }
-            cipherIntMatrx = new IntMatrix(cipherList);
-            cipherSpace.setCharMatrix(cipherIntMatrx.toCharMatrix());
+            cipherList.add(mod(ele*k1+k2, 26));
         }
+        cipherSpace = new Matrix(cipherList).toCharMatrix();
     }
 
     @Override
     public void decoding() {
         int k1, k2;
-        IntMatrix keyIntMatrix = keySpace.getMatrix();
-        k1 = keyIntMatrix.getValue(0,0);
-        k2 = keyIntMatrix.getValue(0,1);
-        k1 = returnInverse(k1,26);
-        if(cipherSpace.type == MatrixClass.Type.CharMatrix)
-        {
+        List<Integer> messageList = new ArrayList<>();
 
-            CharMatrix charMatrix = cipherSpace.getMatrix();
-            IntMatrix cipherCharMatrix = charMatrix.toIntMatrix();
-            IntMatrix messageMatrix;
-            List<Integer> messageList = new ArrayList<>();
-            for(int ele: cipherCharMatrix.intData[0])
-            {
-                messageList.add(mod(k1 * (ele - k2),26));
-            }
-            messageMatrix = new IntMatrix(messageList);
-            messageSpace.setCharMatrix(messageMatrix.toCharMatrix());
+        k1 = keySpace.getIntValue(0,0);
+        k2 = keySpace.getIntValue(0,1);
+        k1 = returnInverse(k1,26);
+
+        Matrix cipherSpaceInt = cipherSpace.toIntMatrix();
+
+        for(int ele: cipherSpaceInt.intData[0])
+        {
+            messageList.add(mod(k1 * (ele - k2),26));
         }
+        messageSpace = new Matrix(messageList).toCharMatrix();
     }
 
     @Override
     public boolean checkMessageSpace() {
-        if(messageSpace.type == MatrixClass.Type.CharMatrix)
-        {
-            CharMatrix charMatrix = messageSpace.getMatrix();
-            return charMatrix.checkIsLetter();
-        }
-        return false;
+        return messageSpace.checkIsLetter();
     }
 
     @Override
     public boolean checkCipherSpace() {
-        if(cipherSpace.type == MatrixClass.Type.CharMatrix)
-        {
-            CharMatrix charMatrix = cipherSpace.getMatrix();
-            return charMatrix.checkIsLetter();
-        }
-        return false;
+        return cipherSpace.checkIsLetter();
     }
 
     @Override
     public boolean checkKeySpace() {
-        if(keySpace.type == MatrixClass.Type.IntMatirx)
+        if(keySpace.getRow() == 1 && keySpace.getColumn() == 2)
         {
-            IntMatrix intMatrix = keySpace.getMatrix();
-            if(intMatrix.getRow() == 1 && intMatrix.getColumn() == 2)
+            int k1 = keySpace.getIntValue(0,0);
+            if(gcd(k1, 26) == 1)
             {
-                int k1 = intMatrix.getValue(0,0);
-                if(gcd(k1, 26) == 1)
-                {
-                    intMatrix.setValue(0,0, mod(intMatrix.getValue(0,0),26));
-                    intMatrix.setValue(0,1, mod(intMatrix.getValue(0,1),26));
-                    keySpace.setIntMatrix(intMatrix);
-                    return true;
-                }
+                keySpace.setValue(0,0, mod(keySpace.getIntValue(0,0),26));
+                keySpace.setValue(0,1, mod(keySpace.getIntValue(0,1),26));
+                return true;
             }
         }
         return false;

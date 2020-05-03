@@ -12,10 +12,10 @@ public class Main {
 
     public static void AffineTest()
     {
-        String mess = "unwpc";
+        String mess = "china";
         int[][] key = {{9,2}};
         Affine affine = new Affine(mess, key);
-        Objects.requireNonNull(affine.doDecoding()).charMatrix.printMatrix();
+        Objects.requireNonNull(affine.doEncoding()).printMatrix();
     }
 
     public static void main(String[] args)
