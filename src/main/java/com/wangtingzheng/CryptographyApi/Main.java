@@ -1,6 +1,5 @@
 package com.wangtingzheng.CryptographyApi;
 import com.wangtingzheng.CryptographyApi.algorithm.Affine;
-import java.util.Objects;
 
 /**
  * @author WangTingZheng
@@ -13,10 +12,14 @@ public class Main {
     public static void AffineTest()
     {
         String mess = "china";
-        int[][] key = {{9,2}};
+        int[][] key = {{9,2,1}};
         Affine affine = new Affine(mess, key);
-        Objects.requireNonNull(affine.doEncoding()).printMatrix();
+        if(affine.doDecoding() == null)
+            System.out.println("加密/解密失败");
+        else
+            affine.doEncoding().printMatrix();
     }
+
 
     public static void main(String[] args)
     {

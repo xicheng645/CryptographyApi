@@ -1,10 +1,9 @@
 package com.wangtingzheng.CryptographyApi.algorithm;
 
 
+import com.wangtingzheng.cryptographystuct.error.Error;
 import com.wangtingzheng.cryptographystuct.matrix.Matrix;
-
 import com.wangtingzheng.cryptographystuct.algorithm.Algorithm;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +24,7 @@ public class Affine extends Algorithm {
     public Affine(String message, int[][] key) {
         super(message, key);
     }
+
 
     @Override
     public void encoding() {
@@ -63,27 +63,61 @@ public class Affine extends Algorithm {
 
     @Override
     public boolean checkMessageSpace() {
-        return messageSpace.checkIsLetter() && messageSpace.getType() ==Matrix.Type.CharMatrix; //检查密文空间是否都是阿拉伯字母（先要是字符，再要是字母）
+        boolean type = messageSpace.getType() == Matrix.Type.CharMatrix; //检查密文空间是否都是阿拉伯字母（先要是字符，再要是字母）
+        if(!type)
+        {
+            errorList.enableError(ErrorNumber.MessageSpaceNotChar);
+            return false;
+        }
+        boolean letter = messageSpace.checkIsLetter();
+        if(!letter)
+        {
+            errorList.enableError(ErrorNumber.MessageSpcaeHasNotLetter);
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean checkCipherSpace() {
-        return cipherSpace.checkIsLetter() && messageSpace.getType() == Matrix.Type.CharMatrix; //检查明文空间是否都是阿拉伯字母（先要是字符，再要是字母）
+        boolean type = cipherSpace.getType() == Matrix.Type.CharMatrix; //检查明文空间是否都是阿拉伯字母（先要是字符，再要是字母）
+        if(!type)
+        {
+            errorList.enableError(ErrorNumber.CipherSpaceNotChar);
+            return false;
+        }
+        boolean letter = cipherSpace.checkIsLetter();
+        if(!letter)
+        {
+            errorList.enableError(ErrorNumber.CipherSpcaeHasNotLetter);
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean checkKeySpace() {
-        if(keySpace.getRow() == 1 && keySpace.getColumn() == 2 && keySpace.getType() == Matrix.Type.IntMatrix) //检查密钥空间是否是整型数组，是否有两个
+        boolean type = keySpace.getType() == Matrix.Type.IntMatrix;
+        if(!type)
         {
-            int k1 = keySpace.getIntValue(0,0); //获取第一个密钥
-            if(gcd(k1, 26) == 1)  //检查密钥k1于26的最大公约数是否是1，这个是仿射密码算法的要求
-            {
-                keySpace.setValue(0,0, mod(keySpace.getIntValue(0,0),26));  //规范密钥（如果不止规定区间内的话）
-                keySpace.setValue(0,1, mod(keySpace.getIntValue(0,1),26));  //规范密钥（如果不止规定区间内的话）
-                return true;
-            }
+            errorList.enableError(ErrorNumber.KeySpaceNotInt);
+            return false;
         }
-        return false;
+        boolean size = keySpace.getRow() == 1 && keySpace.getColumn() == 2;
+        if(!size)
+        {
+            errorList.enableError(ErrorNumber.keyNumberNotMatch);
+            return false;
+        }
+        int k1 = keySpace.getIntValue(0,0); //获取第一个密钥
+        if(gcd(k1, 26) != 1)  //检查密钥k1于26的最大公约数是否是1，这个是仿射密码算法的要求
+        {
+           errorList.enableError(ErrorNumber.GcdError);
+           return false;
+        }
+        keySpace.setValue(0,0, mod(keySpace.getIntValue(0,0),26));  //规范密钥（如果不止规定区间内的话）
+        keySpace.setValue(0,1, mod(keySpace.getIntValue(0,1),26));  //规范密钥（如果不止规定区间内的话）
+        return true;
     }
 
     public int gcd(int a, int b)
@@ -150,5 +184,66 @@ public class Affine extends Algorithm {
         if(number < -1)
             return 26-(number*-1)%mod;
         return number%mod;
+    }
+
+    @Override
+    public void errorInit() {
+        Error MessageSpaceNotChar = new Error(ErrorNumber.MessageSpaceNotChar,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("Message Space is not char.");
+            }
+        };
+        Error MessageSpcaeHasNotLetter = new Error(ErrorNumber.MessageSpcaeHasNotLetter,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("Message Space has not-letter element.");
+            }
+        };
+        Error CipherSpaceNotChar = new Error(ErrorNumber.CipherSpaceNotChar,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("Cipher Space is not char.");
+            }
+        };
+
+        Error CipherSpcaeHasNotLetter = new Error(ErrorNumber.CipherSpcaeHasNotLetter,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("Cipher Space has not-letter element.");
+            }
+        };
+        Error KeySpaceNotInt = new Error(ErrorNumber.KeySpaceNotInt,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("Key Space is not int.");
+            }
+        };
+        Error GcdError = new Error(ErrorNumber.GcdError,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("The gcd of k1 and 26 not 1.");
+            }
+        };
+
+        Error keyNumberNotMatch = new Error(ErrorNumber.keyNumberNotMatch,this.getClass(), errorList) {
+            @Override
+            public void errorReport() {
+                System.out.println("The number of key is not 2.");
+            }
+        };
+        errorList.addError(keyNumberNotMatch);
+    }
+
+    public static class ErrorNumber
+    {
+        public static int MessageSpaceNotChar = 1;
+        public static int MessageSpcaeHasNotLetter = 2;
+        public static int CipherSpaceNotChar = 3;
+        public static int CipherSpcaeHasNotLetter = 4;
+
+        public static int KeySpaceNotInt = 5;
+        public static int GcdError = 6;
+        public static int keyNumberNotMatch =7;
     }
 }
